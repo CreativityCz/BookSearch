@@ -1,5 +1,6 @@
 package cuiz.testmatialdesign;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,7 +23,7 @@ import java.util.List;
 
 import cuiz.testmatialdesign.Adapter.BooksAdapter;
 import cuiz.testmatialdesign.Adapter.SampleFragmentPagerAdapter;
-import cuiz.testmatialdesign.Entity.BookInfo;
+import cuiz.testmatialdesign.Entity.Book;
 import me.drakeet.materialdialog.MaterialDialog;
 public class MainActivity extends AppCompatActivity/*
         implements NavigationView.OnNavigationItemSelectedListener*/ {
@@ -30,7 +31,6 @@ public class MainActivity extends AppCompatActivity/*
     private RecyclerView recyclerView = null;
     FloatingActionButton fab;
 
-    private ArrayList<BookInfo> bookInfos = null;
     BooksAdapter booksAdapter;
 
 
@@ -54,11 +54,13 @@ public class MainActivity extends AppCompatActivity/*
         fab= (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new fabClickListener());
 
+        doSearch("花千骨");
+
         // Initialize contacts
         /*bookInfos = new ArrayList<>();//刚开始这一步忘写了。。傻眼，界面加载不了。
-        BookInfo book1 = new BookInfo("自控力",R.drawable.ic_menu_gallery,"introduce: very good");
-        BookInfo book2 = new BookInfo("花千骨（上）",R.drawable.ic_menu_slideshow,"介绍：不错");
-        BookInfo book3 = new BookInfo("花千骨（下）",R.drawable.ic_menu_gallery,"介绍：相当不错");
+        Book book1 = new Book("自控力",R.drawable.ic_menu_gallery,"introduce: very good");
+        Book book2 = new Book("花千骨（上）",R.drawable.ic_menu_slideshow,"介绍：不错");
+        Book book3 = new Book("花千骨（下）",R.drawable.ic_menu_gallery,"介绍：相当不错");
         bookInfos.add(book1);
         bookInfos.add(book2);
         bookInfos.add(book3);*/
@@ -106,22 +108,32 @@ public class MainActivity extends AppCompatActivity/*
             String searchContent = s.toString();
             Snackbar.make(fab, searchContent, Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
+
+
             doSearch(searchContent);//搜索
         }
     }
     //搜索书籍，实现回调接口，得到响应结果。
     public void doSearch(String searchContent){
         booksAdapter.cleanItems();
-        BookInfo.searchBooks(searchContent, new BookInfo.IBookResponce<List<BookInfo>>() {
+        Book.searchBooks(searchContent, new Book.IBookResponce<List<Book>>() {
             @Override
-            public void onGetData(List<BookInfo> data) {
+            public void onGetData(List<Book> data) {
                 booksAdapter.updateItems(data);
                 //test
-                for(BookInfo bookInfo: data){
-                    System.out.println("Result::================"+bookInfo.toString());
+                for(Book mbook: data){
+                    System.out.println("Result::================"+mbook.toString());
                 }
             }
         });
+    }
+
+    //public void animateActivity()
+    public void showBookDetail(Book book){
+        if(book==null)return;
+        Intent intent = new Intent(this,BookDetailActivity.class);
+        intent.putExtra("BOOK",book);
+        this.startActivity(intent);
     }
 
 

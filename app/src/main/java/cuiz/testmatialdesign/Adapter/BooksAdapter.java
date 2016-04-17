@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-import cuiz.testmatialdesign.Entity.BookInfo;
+import cuiz.testmatialdesign.Entity.Book;
 import cuiz.testmatialdesign.MainActivity;
 import cuiz.testmatialdesign.R;
 
@@ -22,22 +22,22 @@ import cuiz.testmatialdesign.R;
  */
 public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> {
 
-    private List<BookInfo> bookInfos = new ArrayList<>(); //---分配内存，我想是因为若传过来的列表是空的话，可能会引起异常--by cz
-    private Context currentContext = null;
+    private List<Book> mBooks = new ArrayList<>(); //---分配内存，我想是因为若传过来的列表是空的话，可能会引起异常--by cz
+    private MainActivity currentContext = null;
 
     public BooksAdapter(){}
 
     public BooksAdapter(Context context) {
-        this.currentContext = context;
+        this.currentContext = (MainActivity)context;
     }
 
     public void cleanItems(){
-        bookInfos.clear();
+        mBooks.clear();
         notifyDataSetChanged();
     }
 
-    public void updateItems(List<BookInfo> bookInfos){
-        this.bookInfos.addAll(bookInfos);
+    public void updateItems(List<Book> mBooks){
+        this.mBooks.addAll(mBooks);
         notifyDataSetChanged();
     }
 
@@ -55,29 +55,40 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
 
 
     @Override
-    public void onBindViewHolder(BooksAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(BooksAdapter.ViewHolder holder, final int position) {
         //set the view attributes based on the data
-        holder.textView1.setText(bookInfos.get(position).getBookName());
-        holder.textView2.setText(bookInfos.get(position).getBookIntroduce());
+        final Book book = mBooks.get(position);
+        holder.tvBookTitle.setText(book.getTitle());
+        holder.tvBookIntro.setText("出版商:"+book.getPublisher()
+                +"\n出版日期:"+book.getPubdate()
+                +"\n作者:"+book.getAuthor()[0]
+                +"\n价格:"+book.getPrice());
 
-        Glide.with(holder.imageView.getContext())
-                .load(bookInfos.get(position).getBookImage())
+        Glide.with(holder.ivBookImage.getContext())
+                .load(book.getImages().getMedium())
                 .fitCenter()
-                .into(holder.imageView);
+                .into(holder.ivBookImage);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentContext.showBookDetail(book);
+            }
+        });
 
     }
 
     @Override
     public int getItemCount() {
-        return bookInfos.size();
+        return mBooks.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
-        ImageView imageView;
-        TextView textView1;
-        TextView textView2;
+        ImageView ivBookImage;
+        TextView tvBookTitle;
+        TextView tvBookIntro;
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ViewHolder(View itemView) {
@@ -85,9 +96,9 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            imageView = (ImageView) itemView.findViewById(R.id.book_image);
-            textView1 = (TextView) itemView.findViewById(R.id.book_name);
-            textView2 = (TextView) itemView.findViewById(R.id.book_introduce);
+            ivBookImage = (ImageView) itemView.findViewById(R.id.book_image);
+            tvBookTitle = (TextView) itemView.findViewById(R.id.book_title);
+            tvBookIntro = (TextView) itemView.findViewById(R.id.book_introduce);
 
 
         }

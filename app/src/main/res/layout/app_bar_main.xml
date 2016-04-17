@@ -8,25 +8,17 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:background="?attr/colorPrimary" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main" />
-    <!--在这里定义一个RecyclerView-->
-    <!--<android.support.v7.widget.RecyclerView
-        android:id="@+id/rvBooks"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        android:layout_margin="30dp"/>-->
+    <include layout="@layout/book_list" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
